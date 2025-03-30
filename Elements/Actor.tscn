@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://ciitsqr4sgiib"]
+
+[ext_resource type="Script" uid="uid://cdftf2n1sr14q" path="res://Elements/actor.gd" id="1_dwlkm"]
+[ext_resource type="Script" uid="uid://2psiyr738xpo" path="res://Items/SelectBox.gd" id="2_hbbgv"]
+
+[node name="Actor" type="Node2D"]
+script = ExtResource("1_dwlkm")
+
+[node name="Image" type="Sprite2D" parent="."]
+
+[node name="SelectBox" type="Node2D" parent="."]
+script = ExtResource("2_hbbgv")
+metadata/_custom_type_script = "uid://2psiyr738xpo"
