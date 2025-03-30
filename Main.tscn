@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://5aw4ibq183oh"]
+
+[ext_resource type="Script" uid="uid://rehsg7ovkg1d" path="res://main.gd" id="1_uu6xs"]
+[ext_resource type="Script" uid="uid://cbgw203bbysla" path="res://background.gd" id="2_r0du0"]
+[ext_resource type="Script" uid="uid://chc20llelvsws" path="res://Items/Path.gd" id="3_r0du0"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_uu6xs")
+
+[node name="Background" type="Node2D" parent="."]
+script = ExtResource("2_r0du0")
+
+[node name="Path" type="Node2D" parent="."]
+script = ExtResource("3_r0du0")
+metadata/_custom_type_script = "uid://chc20llelvsws"
