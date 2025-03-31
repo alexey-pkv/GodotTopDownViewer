@@ -14,6 +14,5 @@ metadata/_custom_type_script = "uid://cbgw203bbysla"
 
 [node name="Actor" parent="." instance=ExtResource("3_cm0pq")]
 position = Vector2(128, 128)
+speed = Vector2(-20, 0)
 texture = ExtResource("4_fos0i")
-
-[connection signal="child_exiting_tree" from="." to="." method="handle_child_exiting_tree"]

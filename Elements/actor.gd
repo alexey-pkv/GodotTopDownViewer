@@ -6,6 +6,12 @@ class_name Actor extends Node2D
 ## The direction this actor is facing. The displayed texture depends on this value.
 var m_face_direction: Core.Direction	= Core.Direction.SOUTH
 
+## The extra size added to the select box.
+var m_box_offset: Vector2 = Vector2(5, 5)
+
+## The behaviour currently attached to this actor.
+var m_behaviour: BaseBehaviour = null
+
 #endregion
 
 
@@ -20,21 +26,44 @@ var m_face_direction: Core.Direction	= Core.Direction.SOUTH
 #region Properties
 
 ## The direction this actor is moving towords.
-var speed_direction: Core.Direction:
-	get: return Core.vec2dir(speed)
+var velocity_direction: Core.Direction:
+	get: return Core.vec2dir(velocity)
 
-## The direction this actor will face based on the speed and direction_override value.
-## If speed is none zero, any value will be ignored.
+## The direction this actor will face based on the velocity and direction_override value.
+## If velocity is none zero, any value will be ignored.
 var direction: Core.Direction:
 	get: return m_face_direction
 	set(d):
-		if speed == Vector2.ZERO:
+		if velocity == Vector2.ZERO:
 			m_face_direction = d
 			__update()
 
 ## Check if there is a directin override value.
 var is_direction_overridden: bool:
 	get: return direction_override != Core.Direction.NONE
+
+## The bounding box size of this actor.
+var bound_box_size: Vector2: 
+	get:
+		if texture == null:
+			return m_box_offset * 2.0
+		 
+		return Vector2(
+			texture.get_width() / 4.0 + m_box_offset.x * 2.0,
+			texture.get_height() + m_box_offset.y * 2.0
+		)
+
+## The bound box of this actor.
+var bound_box: Rect2:
+	get:
+		return Rect2(
+			position - bound_box_size / 2.0,
+			bound_box_size
+		)
+
+## The linear speed of the actor.
+var speed: float:
+	get: return velocity.length()
 
 #endregion
 
@@ -55,11 +84,11 @@ var is_direction_overridden: bool:
 		direction_override = d
 		__update()
 
-## The speed of the actor.
-@export var speed: Vector2 = Vector2.ZERO:
-	get: return speed
+## The velocity of the actor.
+@export var velocity: Vector2 = Vector2.ZERO:
+	get: return velocity
 	set(v):
-		speed = v
+		velocity = v
 		__update()
 
 ## The actors texture.
@@ -100,6 +129,7 @@ func __update_texture() -> void:
 	sub_texture.region = Rect2(Vector2(width * offset, 0), Vector2(width, size.y))
 	
 	m_sprite.texture = sub_texture
+	m_select_box.size = bound_box_size
 
 func __update() -> void:
 	if !is_inside_tree():
@@ -111,14 +141,14 @@ func __update() -> void:
 	
 	if is_direction_overridden:
 		new_dir = direction_override
-	elif speed != Vector2.ZERO:
-		new_dir = Core.vec2dir(speed)
+	elif velocity != Vector2.ZERO:
+		new_dir = Core.vec2dir(velocity)
 	
 	if m_face_direction != new_dir:
 		m_face_direction = new_dir
 		__update_texture()
 	
-	set_process(speed != Vector2.ZERO)
+	set_process(velocity != Vector2.ZERO)
 
 #endregion
 
@@ -130,7 +160,7 @@ func _ready() -> void:
 	__update_texture()
 
 func _process(delta: float) -> void:
-	position += delta * speed
+	position += delta * velocity
 
 #endregion
 
@@ -138,6 +168,18 @@ func _process(delta: float) -> void:
 #region Methods
 
 func stop() -> void:
-	speed = Vector2.ZERO
+	velocity = Vector2.ZERO
+
+func remove_behaviour() -> void:
+	set_behaviour(null)
+
+func set_behaviour(behaviour: BaseBehaviour) -> void:
+	if m_behaviour != null:
+		m_behaviour = null
+		m_behaviour.queue_free()
+	
+	if behaviour != null:
+		m_behaviour = behaviour
+		add_child(behaviour)
 
 #endregion
