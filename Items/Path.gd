@@ -41,12 +41,13 @@ var m_line : Line2D	= null
 		m_line = null
 		set_process(true)
 
-	
-
 #endregion
 
 
 #regionm Private Methods
+
+func __register_node(node: Node) -> void:
+	pass
 
 func __recreate_line() -> void:
 	if m_line == null:
@@ -118,6 +119,9 @@ func add_point(at: Vector2) -> void:
 func add_mouse() -> void:
 	points.push_back(FOLLOW_MOUSE)
 	set_process(true)
+
+func remove_point_node(node: Node2D) -> void:
+	pass
 
 func remove_mouse() -> void:
 	for i in len(points):
